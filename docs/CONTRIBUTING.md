@@ -5,23 +5,20 @@ the Rewrap Revived project. Rewrap Revived has three main components: an F# core
 via Fable), a VSCode extension (TypeScript + Parcel), and a Visual Studio
 extension (C#).
 
-## Prerequisites
+## Dependencies
 
-You have two options:
-1. nix flake
-2. manually install dependencies
-
-The build script auto-runs `dotnet tool restore` (installs Fable) and
-`npm install` on first build, so you don't need to run these manually.
-
-### Option 1: nix
-This will create a usable development environment with all the dependencies included:
+Install `nix` with flake support, and run this command to get a dev shell with
+all the dependencies installed:
 
 ```sh
 nix develop
 ```
 
-### Option 2: Manually install dependencies
+The build script auto-runs `npm install` and `dotnet tool restore` (installs
+Fable) on first build, so you don't need to run these manually.
+
+Alternatively, you can install all the dependencies manually. See flake.nix for
+a comprehensive list. These are the most important ones:
 
 | Tool     | Version                           | Notes                                            |
 | -------- | --------------------------------- | ------------------------------------------------ |
@@ -31,13 +28,13 @@ nix develop
 
 ## Project Structure
 
-```
-core/           F# wrapping logic, compiled to JS via Fable
-vscode/         VSCode extension — TypeScript, bundled with Parcel
-vs/             Visual Studio extension — C#
-docs/           MkDocs documentation site + spec/test files
-.config/do.mjs  Build orchestrator, invoked via ./do (Unix) or do.cmd (Windows)
-```
+| Path             | Purpose                                            |
+| ---------------- | -------------------------------------------------- |
+| `core/`          | F# wrapping logic, compiled to JS via Fable        |
+| `vscode/`        | VSCode extension — TypeScript, bundled with Parcel |
+| `vs/`            | Visual Studio extension — C#                       |
+| `docs/`          | MkDocs documentation site + spec/test files        |
+| `.config/do.mjs` | Build orchestrator, invoked via `./do` or `do.cmd` |
 
 ## The `./do` CLI
 
@@ -145,6 +142,13 @@ assertions against the VSCode API (settings resolution, basic wrapping).
     Integration tests **cannot** run from inside VSCode's integrated terminal.
     The script detects this and skips with a warning. Run from an external
     terminal instead.
+
+Alternatively, you can run the vscode tests with `xvfb-run`, which actually
+*does* work within a vscode terminal:
+
+```sh
+xvfb-run ./do test vscode
+```
 
 ## Manual Testing in VSCode
 

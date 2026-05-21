@@ -56,5 +56,5 @@ since you have reported the issue (unless of course, it is already present in bo
 ## Contributing
 
 To build and test locally, run `./do build` and `./do test`. See the
-[contributing guide](docs/CONTRIBUTING.md) for full development workflow
+[contributing guide](https://dnut.github.io/Rewrap/CONTRIBUTING/) for full development workflow
 documentation including prerequisites, manual testing, and publishing.
