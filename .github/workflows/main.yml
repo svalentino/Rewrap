@@ -13,6 +13,4 @@ jobs:
         uses: cachix/install-nix-action@v27
 
       - name: Build & Run Tests
-        uses: GabrielBB/xvfb-action@v1.2
-        with:
-          run: nix develop -c ./do build test --production
+        run: nix develop -c xvfb-run ./do prod
