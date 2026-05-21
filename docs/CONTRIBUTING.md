@@ -8,25 +8,26 @@ extension (C#).
 ## Prerequisites
 
 You have two options:
-- nix flake
-- manually install dependencies
+1. nix flake
+2. manually install dependencies
 
+The build script auto-runs `dotnet tool restore` (installs Fable) and
+`npm install` on first build, so you don't need to run these manually.
+
+### Option 1: nix
 This will create a usable development environment with all the dependencies included:
 
 ```sh
 nix develop
 ```
 
-Dependencies:
+### Option 2: Manually install dependencies
 
 | Tool     | Version                           | Notes                                            |
 | -------- | --------------------------------- | ------------------------------------------------ |
 | .NET SDK | 6.0                               | Required for Fable 3.6.2. SDK 8.0 does not work. |
 | Node.js  | 18+ recommended (tested up to 25) |                                                  |
 | npm      | Included with Node.js             |                                                  |
-
-The build script auto-runs `dotnet tool restore` (installs Fable) and
-`npm install` on first build, so you don't need to install these manually.
 
 ## Project Structure
 
