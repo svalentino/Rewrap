@@ -7,11 +7,23 @@ extension (C#).
 
 ## Prerequisites
 
-| Tool       | Version                           | Notes                                      |
-|------------|-----------------------------------|--------------------------------------------|
-| .NET SDK   | 6.0                               | Required for Fable 3.6.2. SDK 8.0 does not work. |
-| Node.js    | 18+ recommended (tested up to 25) |                                            |
-| npm        | Included with Node.js             |                                            |
+You have two options:
+- nix flake
+- manually install dependencies
+
+This will create a usable development environment with all the dependencies included:
+
+```sh
+nix develop
+```
+
+Dependencies:
+
+| Tool     | Version                           | Notes                                            |
+| -------- | --------------------------------- | ------------------------------------------------ |
+| .NET SDK | 6.0                               | Required for Fable 3.6.2. SDK 8.0 does not work. |
+| Node.js  | 18+ recommended (tested up to 25) |                                                  |
+| npm      | Included with Node.js             |                                                  |
 
 The build script auto-runs `dotnet tool restore` (installs Fable) and
 `npm install` on first build, so you don't need to install these manually.
@@ -31,16 +43,16 @@ docs/           MkDocs documentation site + spec/test files
 All development operations go through the `./do` script. Run `./do` with no
 arguments to see available commands.
 
-| Command          | Description                                              |
-|------------------|----------------------------------------------------------|
-| `./do clean`     | Remove build artifacts                                   |
-| `./do build`     | Development build (Fable + Parcel)                       |
-| `./do test`      | Build then run core + VSCode tests                       |
-| `./do prod`      | Production build (tests, ESLint, optimized bundle)       |
-| `./do watch`     | Concurrent Fable, TypeScript, and Parcel file watchers   |
-| `./do package`   | Create `.obj/Rewrap-VSCode.vsix`                         |
-| `./do prepublish`| Clean build, version bump, changelog prep                |
-| `./do publish`   | Package and publish to Marketplace + OpenVSX             |
+| Command           | Description                                            |
+| ----------------- | ------------------------------------------------------ |
+| `./do clean`      | Remove build artifacts                                 |
+| `./do build`      | Development build (Fable + Parcel)                     |
+| `./do test`       | Build then run core + VSCode tests                     |
+| `./do prod`       | Production build (tests, ESLint, optimized bundle)     |
+| `./do watch`      | Concurrent Fable, TypeScript, and Parcel file watchers |
+| `./do package`    | Create `.obj/Rewrap-VSCode.vsix`                       |
+| `./do prepublish` | Clean build, version bump, changelog prep              |
+| `./do publish`    | Package and publish to Marketplace + OpenVSX           |
 
 Each operation implies its predecessors — `test` builds first, `prod` tests
 first, `package` implies `prod`, and so on.
@@ -147,12 +159,12 @@ All launch configurations run the "Build extension" pre-launch task
 
 **Available launch configurations:**
 
-| Configuration       | Purpose                                        |
-|--------------------|-------------------------------------------------|
-| Extension          | Manual e2e testing in a dev VSCode window       |
-| Web Extension      | Test as a web/browser extension                 |
-| Core Tests         | Debug core spec tests with breakpoints          |
-| Extension Tests    | Debug VSCode integration tests with breakpoints |
+| Configuration   | Purpose                                         |
+| --------------- | ----------------------------------------------- |
+| Extension       | Manual e2e testing in a dev VSCode window       |
+| Web Extension   | Test as a web/browser extension                 |
+| Core Tests      | Debug core spec tests with breakpoints          |
+| Extension Tests | Debug VSCode integration tests with breakpoints |
 
 ## Watch Mode
 
@@ -190,10 +202,10 @@ Runs a production build and outputs `.obj/Rewrap-VSCode.vsix`.
 
 **Required environment variables:**
 
-| Variable     | Purpose                    |
-|-------------|----------------------------|
-| `GITHUB_PAT` | GitHub releases             |
-| `OVSX_PAT`   | OpenVSX publishing          |
+| Variable     | Purpose            |
+| ------------ | ------------------ |
+| `GITHUB_PAT` | GitHub releases    |
+| `OVSX_PAT`   | OpenVSX publishing |
 
 ### Versioning
 
