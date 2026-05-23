@@ -32,9 +32,12 @@ type SelPosType = Anchor | Active
 /// Functions that are native to the test platform (.Net or JS)
 module Native =
 #if FABLE_COMPILER
+  open Fable.Core
   open Fable.Core.JsInterop
   let files : Lines = importMember "./Native.js"
   let readFile : string -> Lines = importMember "./Native.js"
+  [<Emit("process.exitCode = $0")>]
+  let setExitCode (_: int) : unit = jsNative
 #else
   open System.IO
   let files =
@@ -297,5 +300,9 @@ let main argv =
   let filtered = allTests |> List.filter (function | Ok (t, _) when t.only = true -> true | _ -> false)
   let testsToRun = if filtered.Length > 0 then filtered else allTests
   let results = testsToRun |> Seq.fold processTest init
+  let exitCode = results.failures + results.errors
   eprintfn "Passed: %i; Failed: %i; Errored: %i" results.passes results.failures results.errors
-  results.failures + results.errors
+  #if FABLE_COMPILER
+  Native.setExitCode exitCode
+  #endif
+  exitCode
