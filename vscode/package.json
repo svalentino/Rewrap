@@ -41,8 +41,8 @@
     "onCommand:rewrap.rewrapCommentAt",
     "onCommand:rewrap.toggleAutoWrap"
   ],
-  "main": "./dist/Extension.js",
-  "browser": "./dist/Extension.js",
+  "main": "./dist/Extension.node.js",
+  "browser": "./dist/Extension.browser.js",
   "capabilities": {
     "untrustedWorkspaces": {
       "supported": true
@@ -135,10 +135,18 @@
   "source": "src/Extension.ts",
   "targets": {
     "main": {
+      "source": "src/Extension.node.ts",
+      "context": "node",
       "includeNodeModules": {
         "vscode": false
       }
     },
-    "browser": false
+    "browser": {
+      "source": "src/Extension.browser.ts",
+      "context": "browser",
+      "includeNodeModules": {
+        "vscode": false
+      }
+    }
   }
 }

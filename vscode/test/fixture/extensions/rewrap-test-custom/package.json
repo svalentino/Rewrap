@@ -1,0 +1,19 @@
+{
+  "name": "rewrap-test-custom",
+  "displayName": "Rewrap Test Custom Language",
+  "publisher": "rewrap-test",
+  "version": "0.0.0",
+  "engines": {
+    "vscode": "^1.63.0"
+  },
+  "contributes": {
+    "languages": [
+      {
+        "id": "rewrap-test-custom",
+        "aliases": ["Rewrap Test Custom"],
+        "extensions": [".rewrap-test"],
+        "configuration": "./language-configuration.json"
+      }
+    ]
+  }
+}

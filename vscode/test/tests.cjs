@@ -1,6 +1,6 @@
 const assert = require('assert')
 const {commands, window, workspace} = require('vscode')
-const {getCoreSettings} = require('../dist/Extension.js')
+const {getCoreSettings} = require('../dist/Extension.node.js')
 
 const testSettings = async (language, expected) => {
   const doc = await workspace.openTextDocument({language, content: ""})
@@ -43,4 +43,5 @@ exports.run = async () => {
 
   // Wrapping tests
   await testWrapping ("javascript", "// a\n// b", "// a b")
+  await testWrapping ("rewrap-test-custom", "// a\n// b", "// a b")
 }

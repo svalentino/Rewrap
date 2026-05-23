@@ -7,7 +7,11 @@ async function main() {
     const extensionDevelopmentPath = resolve(__dirname, '..')
     const extensionTestsPath = resolve(__dirname, 'tests.cjs')
     const workspace = resolve(__dirname, 'fixture')
-    const launchArgs = [workspace, '--disable-extensions', '--disable-gpu']
+    const extensionsDir = resolve(__dirname, 'fixture/extensions')
+    // --disable-extensions cannot be used because the fixture extension must
+    // load. this means built-in extensions will also be loaded, but that should
+    // be fine.
+    const launchArgs = [workspace, '--extensions-dir', extensionsDir, '--disable-gpu']
 
     // Download manually so we can choose the location
     vscodeExecutablePath = await downloadAndUnzipVSCode({cachePath})

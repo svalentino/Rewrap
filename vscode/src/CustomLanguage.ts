@@ -1,6 +1,7 @@
 import JSON from 'json5'
 import vscode from 'vscode'
 import {CustomMarkers, noCustomMarkers} from './Core'
+import {platform} from './Platform'
 
 const getConfig = (getText, path) => {
   let config = {line: null, block: null}
@@ -59,10 +60,10 @@ export default function (exts?, getFileText?) {
   exts = exts || vscode.extensions.all
   if (!exts.length)
     console.warn("`vscode.extensions.all` returned an empty array. Something is wrong.")
-  if (!getFileText) {
-    try { getFileText = require('fs').readFileSync }
-    catch { getFileText = () => "" }
-  }
+  // Read `platform.readFile` lazily: the desktop entry overwrites it after
+  // this module has already evaluated (ESM import hoisting), so capturing it
+  // eagerly here would always see the empty-string stub.
+  getFileText = getFileText || (path => platform.readFile(path))
 
   let cache
   return lang => {
