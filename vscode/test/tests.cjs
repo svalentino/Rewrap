@@ -39,7 +39,7 @@ const testWrapping = async (language, content, expected) => {
 exports.run = async () => {
   // Settings tests
   // breaks when run in parallel (Promise.all)
-  for([l, e] of Object.entries(expectedSettings)) { await testSettings(l,e) }
+  for(const [l, e] of Object.entries(expectedSettings)) { await testSettings(l,e) }
 
   // Wrapping tests
   await testWrapping ("javascript", "// a\n// b", "// a b")
