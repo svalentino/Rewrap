@@ -45,7 +45,7 @@
             ];
         in {
           default = pkgs.mkShell {
-            packages = with pkgs; [ dotnet-sdk_6 nodejs_21 xvfb-run ];
+            packages = with pkgs; [ dotnet-sdk_6 nodejs_21 vsce xvfb-run ];
             shellHook = ''
               export LD_LIBRARY_PATH=${
                 pkgs.lib.makeLibraryPath vscodeRuntimeLibs
