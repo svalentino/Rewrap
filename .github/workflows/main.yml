@@ -13,7 +13,7 @@ jobs:
         uses: cachix/install-nix-action@v27
 
       - name: Build & Run Tests
-        run: nix develop -c xvfb-run ./do test --release
+        run: ./do test --release
 
       - name: Package
-        run: nix develop -c ./do package
+        run: ./do package
