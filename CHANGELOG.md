@@ -1,6 +1,24 @@
 See also [https://github.com/dnut/rewrap/releases](https://github.com/dnut/rewrap/releases) (for working links to issues)
 
 
+#### 17.10.0
+
+Features:
+- Add CUDA C++ support (#414)
+- JavaScript/TypeScript: Ignore ESLint directive comments during wrapping (#33, #34)
+
+Fixes:
+- VS Code: Restore custom language comment markers contributed by other extensions (#16)
+
+Maintenance:
+- Fix package name to `rewrap-revived` in package.json.
+- Add Nix flake for dependency management.
+- Run tests in CI for every PR.
+- Make `./do` install npm dependencies as needed.
+- Make core test failures exit with an error and improve VS Code test isolation.
+- Add contributor guide.
+- Remove committed VS Code settings.
+
 #### 17.9
 - Add Zig language support (#1)
 #### 17.8
