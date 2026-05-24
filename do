@@ -54,6 +54,12 @@ def parse_args():
     version_parser.add_argument("version", nargs="?", help="X.Y.Z to set; omit to print current")
     version_parser.set_defaults(func=version)
 
+    release_notes_parser = sub.add_parser("release-notes")
+    release_notes_parser.add_argument(
+        "version", nargs="?", help="X.Y.Z to extract; omit to use current version"
+    )
+    release_notes_parser.set_defaults(func=release_notes)
+
     args = parser.parse_args()
 
     # Normalize component to two booleans for downstream readability
@@ -84,7 +90,7 @@ def build(args):
     if args.vscode:
         procs += build_vscode(args)
     if args.watch and procs:
-        print("Watching. Ctrl-C to stop.")
+        print("Watching. Ctrl-C to stop.", flush=True)
         try:
             for pr in procs:
                 pr.wait()
@@ -133,7 +139,7 @@ def package(args):
     path = VSIX.format(version=version)
 
     npx(args, f"vsce package {pre} -o ../{path}", cwd="vscode")
-    print(f"VSIX created at {path}")
+    print(f"VSIX created at {path}", flush=True)
 
 
 def publish(args):
@@ -151,10 +157,31 @@ def publish(args):
 
 def version(args):
     if not args.version:
-        print(read_version())
+        print(read_version(), flush=True)
         return
     write_version(args.version)
     run("npm install", cwd="vscode")
+
+
+def release_notes(args):
+    version_number = args.version or read_version()
+    if version_number.startswith("v"):
+        version_number = version_number[1:]
+
+    changelog = Path("CHANGELOG.md").read_text()
+    heading = re.search(rf"^#\s+{re.escape(version_number)}\s*$", changelog, re.MULTILINE)
+    if not heading:
+        sys.exit(f"No changelog section found for {version_number}")
+
+    start = heading.end()
+    next_heading = re.search(r"^#\s+\S", changelog[start:], re.MULTILINE)
+    end = start + next_heading.start() if next_heading else len(changelog)
+    notes = changelog[start:end].strip()
+    if not notes:
+        sys.exit(f"Changelog section for {version_number} is empty")
+
+    with open(f"release-notes.md", "w") as f:
+        f.write(notes)
 
 
 # ---------- Build steps ----------
@@ -240,7 +267,7 @@ def sub_in_file(path, regex, replacement):
 
 
 def run(cmd, cwd=None, **env):
-    print(f"\n\033[34m{cwd if cwd else ''}> {cmd}\033[0m")
+    print(f"\n\033[34m{cwd if cwd else ''}> {cmd}\033[0m", flush=True)
     try:
         subprocess.run(cmd, shell=True, cwd=cwd, check=True, env={**os.environ, **env})
     except subprocess.CalledProcessError:
@@ -252,19 +279,19 @@ def npx(args, cmd, cwd=None):
 
 
 def popen(cmd, cwd=None):
-    print(f"\n\033[34m{cwd if cwd else ''}> {cmd}\033[0m")
+    print(f"\n\033[34m{cwd if cwd else ''}> {cmd}\033[0m", flush=True)
     return subprocess.Popen(cmd, shell=True, cwd=cwd)
 
 
 def rmtree(p):
     if Path(p).exists():
-        print(f"\n\033[34m> rm -rf {p}\033[0m")
+        print(f"\n\033[34m> rm -rf {p}\033[0m", flush=True)
         shutil.rmtree(p)
 
 
 def unlink(p):
     if Path(p).exists():
-        print(f"\n\033[34m> rm {p}\033[0m")
+        print(f"\n\033[34m> rm {p}\033[0m", flush=True)
         Path(p).unlink()
 
 

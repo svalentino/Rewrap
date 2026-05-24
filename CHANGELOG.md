@@ -1,7 +1,7 @@
 See also [https://github.com/dnut/rewrap/releases](https://github.com/dnut/rewrap/releases) (for working links to issues)
 
 
-#### 17.10.0
+# 17.10.0
 
 Features:
 - Add CUDA C++ support (#414)
@@ -14,26 +14,26 @@ Maintenance:
 - Fix package name to `rewrap-revived` in package.json.
 - Add Nix flake for dependency management.
 - Run tests in CI for every PR.
-- Make `./do` install npm dependencies as needed.
+- Replace `./do` with new python implementation.
 - Make core test failures exit with an error and improve VS Code test isolation.
 - Add contributor guide.
 - Remove committed VS Code settings.
 
-#### 17.9
+# 17.9
 - Add Zig language support (#1)
-#### 17.8
+# 17.8
 - Fix error when using "Rewrap At..." command (#324)
-#### 17.7
+# 17.7
 - New feature: Run rewrap on save (#165)
 - Markdown: Fix front-matter marker rules (#321)
 - Support VS Code for the Web (#314): Attempt 2
-#### 17.6
+# 17.6
 - Support .rmd files as markdown (#245)
 - Basic support for Textile files as markdown (#271)
 - Support FIDL (#255), Pascal/Delphi (#97) & pylintrc files (#121)
 - Shell script: Ignore shebangs (#129)
 - Attempt at supporting VS Code for the Web (#314)
-#### 17.5
+# 17.5
 - Add '//'-comments to CSS (workaround for #309)
 - Fix batch files: case-insensitive "REM" and "@" prefix (#313)
 - Fix the document being 'modified' if there were no actual changes (#308, #315)
@@ -41,15 +41,15 @@ Maintenance:
   wrapping. Is more efficient and should hopefully fix issues with autowrap when typing
   too fast (#207). For the most part you should notice no changes but please report any
   bugs where the selection after wrapping is not as expected.
-#### 17.4
+# 17.4
 - Make the rule of ending a line with 2 spaces to preserve the line-break after work everywhere.
 - Support Prisma (#306)
-#### 17.3
+# 17.3
 - MDX files: Treat as Markdown.
-#### 17.2
+# 17.2
 - Lua: Support `--[=[` block comments (#290)
 - VS Code: Attempt to prevent rare "TextEditor has been disposed" error (#100)
-#### 17.1
+# 17.1
 - VS Code: Change extension activation event from on startup to "onStartupFinished". This
   should help to avoid slowing down VS Code startup. Testing to see if any problems come
   from this.
@@ -58,13 +58,13 @@ Maintenance:
 ---
 
 
-### 1.16.3
+# 1.16.3
 
 - Markdown: Fix front-matter marker rules (#321)
 - Preparation for supporting VS Code for the Web
 
 
-### 1.16.2
+# 1.16.2
 
 - Support .rmd files as markdown (#245)
 - Basic support for Textile files as markdown (#271)
@@ -75,7 +75,7 @@ Maintenance:
 - Fix the document being 'modified' if there were no actual changes (#308, #315)
 
 
-### 1.16.1
+# 1.16.1
 
 - VS Code: Attempt to prevent rare "TextEditor has been disposed" error (#100)
 - Lua: Support `--[=[` block comments (#290)
@@ -83,7 +83,7 @@ Maintenance:
 - Support Prisma (#306)
 
 
-## 1.16.0
+# 1.16.0
 
 - New architecture (still WIP) with performance increase.
 - Markdown: new parser that fixes many small bugs (inc #288), as well as supporting:
@@ -96,29 +96,29 @@ Maintenance:
   extension (thereby indirectly supporting .editorconfig) (#300).
 
 
-### 1.15.4
+# 1.15.4
 
 - Support svelte files (HTML) (#243, #299).
 
 
-### 1.15.3
+# 1.15.3
 
 - VSCode: support untrusted workspaces (#292).
 - VSCode: Fix crash when a language extension provides a line- but no block comment marker.
 
 
-### 1.15.2
+# 1.15.2
 
 - Fix regression: Wrapping column < 1 should be treated as no wrapping
 
 
-### 1.15.1
+# 1.15.1
 
 - VS Code: Fix broken release (VSIX file)
 - Visual Studio: Fix crash in VS 17.1 Preview
 
 
-## 1.15.0
+# 1.15.0
 
 This is a small release to push out unreleased changes and support Visual Studio
 2022. Larger changes are coming soon.
@@ -131,7 +131,7 @@ This is a small release to push out unreleased changes and support Visual Studio
 - Fix whitespace disappearing around curly quotes (#119).
 
 
-## 1.14.0
+# 1.14.0
 
 - Make `autoWrap.enabled` a per-language setting; auto-wrap toggle command a
   per-document override. (#149)
@@ -144,7 +144,7 @@ This is a small release to push out unreleased changes and support Visual Studio
 - Markdown: preserve line-breaks after `<br(/)>` (#223).
 
 
-## 1.13.0
+# 1.13.0
 
 - Change to how the indent of comment content is handled. Now, instead of taking
   the indent of the first line and applying it to rest of the comment, the whole
@@ -158,7 +158,7 @@ This is a small release to push out unreleased changes and support Visual Studio
 - Fix HTML not working in Visual Studio.
 
 
-## 1.12.0
+# 1.12.0
 
 Lots of minor improvements. General:
 - Can now preserve a line break after any line by ending it with two spaces (was
@@ -175,7 +175,7 @@ Language-specific:
   elements; wrap all other elements inline (#174).
 
 
-### 1.11.1
+# 1.11.1
 
 - Fix autowrap not working in embedded sections in html files in some cases
   (#162)
@@ -185,7 +185,7 @@ Language-specific:
   (#199)
 
 
-## 1.11.0
+# 1.11.0
 
 General enhancements:
 - Modify "Rewrap at custom column" command to make "unwrapping" easier (#107)
@@ -201,7 +201,7 @@ General bugfixes:
 - VS: Fix an index out of bounds bug (#159)
 
 
-### 1.10.1
+# 1.10.1
 
 - Lua: Fix block comments (#183)
 - RST: Fix only comments being wrapped (#191)
@@ -210,7 +210,7 @@ General bugfixes:
 - Fixes the Visual Studio release (#195)
 
 
-## 1.10.0
+# 1.10.0
 
 - Rewrap now has basic support for any language if the user has an extension for
   it installed (VSCode only).
@@ -223,35 +223,35 @@ General bugfixes:
   pre-string characters [bfru] (#171, #170, #128).
 
 
-### 1.9.3
+# 1.9.3
 
 VS-only release: Support all future VS2019 (v16.x) versions (#143)
 
 
-### 1.9.2
+# 1.9.2
 
 VS-only release: Adds support for VS 2019.
 
 
-### 1.9.1
+# 1.9.1
 
 The new setting `rewrap.autoWrap.enabled` can now be used to ensure this feature
 is enabled in new installations (#87). Apart from that, the feature and the
 toggle command for it work the same as before.
 
 
-## 1.9.0
+# 1.9.0
 
 - Support East Asian (CJK) languages (#75)
 - Support HCL/Terraform config files (#85)
 
 
-### 1.8.1
+# 1.8.1
 
 - Support Vue HTML templates (#82)
 
 
-## 1.8.0
+# 1.8.0
 
 Mostly bugfixes:
 - Fix to entire file being re-syntax highlighted (#78)
@@ -261,12 +261,12 @@ Mostly bugfixes:
 - Config files (.conf, .gitconfig etc): restore support (was broken)
 
 
-### 1.7.1
+# 1.7.1
 
 - LaTeX: Fix wrapping after * environments (#77)
 
 
-## 1.7.0
+# 1.7.0
 
 - Auto-wrap setting (on/off) now persists between sessions.
 - LaTeX: Preserve verbatim and math sections (#68, #69)
@@ -276,12 +276,12 @@ Mostly bugfixes:
 - Crystal and MATLAB languages added. (#71, #72)
 
 
-### 1.6.1
+# 1.6.1
 
 - Fixes leading '|'s in Purescript doc comments.
 
 
-## 1.6.0
+# 1.6.0
 
 - **Added auto-wrap feature (#45)** ([more info](https://github.com/dnut/rewrap/wiki/Auto-wrap)).
 - Added languages: Lean and D (extra support for D doc-comments still to come)
@@ -291,25 +291,25 @@ Mostly bugfixes:
 - Code in a source file is no longer wrappable (#41, #51)
 
 
-### 1.5.3
+# 1.5.3
 
 - Support Tcl (#54)
 - VS: Add keywords for VS settings search
 
 
-### 1.5.2
+# 1.5.2
 
 - Support lines starting with `*` in all C-Style blocks (`/* .. */`) in all languages that use them.
 
 
-### 1.5.1
+# 1.5.1
 
 - Added support for Protocol Buffers (Protobuf) (#47)
 - Added support for GraphQL (#49)
 - Fixed issue with "\0" in text (#48)
 
 
-## 1.5.0
+# 1.5.0
 
 - Added multiple ruler support ([VSCode](https://github.com/dnut/rewrap/wiki/Settings-VSCode#wrapping-to-rulers), [VS](https://github.com/dnut/rewrap/wiki/Settings-Visual-Studio#wrapping-to-rulers)). (#30)
 - Added Git tag editing as a document type.
@@ -317,7 +317,7 @@ Mostly bugfixes:
 - VS: Fixed bug in Options screen (#44)
 
 
-### 1.4.2
+# 1.4.2
 
 - Added support for PowerShell Comment-Based Help (#43).
 - Added git-commit as a document type.
@@ -325,12 +325,12 @@ Mostly bugfixes:
   - Because of a change here in how settings are stored, existing settings won't be carried over after this upgrade.
 
 
-### 1.4.1
+# 1.4.1
 
 Fixed a bug with markdown block-quotes (#42).
 
 
-## 1.4.0
+# 1.4.0
 
 Important: if you still use and prefer the old keybinding for Rewrap (`ctrl+k ctrl+w`), please add it to your settings manually. It will be removed in the next version.
 
@@ -356,12 +356,12 @@ Other fixes and changes:
 <sup>2</sup> (This introduces a small breaking change: where code samples (which aren't rewrapped) within a comment previously only required a 2-space indent, now they require 4 spaces, in line with the Markdown spec.)
 
 
-## 1.3.0
+# 1.3.0
 
 Added a new command; "Rewrap Comment / Text at column..." (id: `rewrap.rewrapCommentAt`). This allows you to re-wrap something at a custom wrapping width (#27).
 
 
-## 1.2.0
+# 1.2.0
 
 - Added support for the new [language-specific settings](https://code.visualstudio.com/updates/v1_9#_language-specific-settings). Now you can customize `editor.rulers` and Rewrap's settings per language. (#25)
 - Improvements for LaTeX:
@@ -371,13 +371,13 @@ Added a new command; "Rewrap Comment / Text at column..." (id: `rewrap.rewrapCom
 - Added basic support for TOML files (#26).
 
 
-## 1.1.0
+# 1.1.0
 
 - Wrapping now works with js and css sections embedded in an html document (#22).
 - Very basic support for (La)TeX files added.
 
 
-## 1.0.0
+# 1.0.0
 
 Bumping up to version 1.0.0 since it was about time.
 
@@ -389,7 +389,7 @@ Bug fixes:
 - Cursor/selection position after wrapping has been fixed. Now the text cursor should always stay next to the same word it was at before wrapping, allowing you to keep typing from where you left off. (#18)
 
 
-### 0.6.4
+# 0.6.4
 
 This doesn't affect comments, only other plain text within a file (eg. in YAML files).
 Now blocks of plain text with differing indents are treated as separate paragraphs. Previously a blank line was needed to separate paragraphs.
@@ -403,7 +403,7 @@ Some text
 Also doesn't affect markdown files, or .txt files, which are currently treated the same as markdown.
 
 
-### 0.6.3
+# 0.6.3
 
 - Added """-comments for Python (previously only supported ''') (#15)
 - Added # markers for ini files (includes other types of config files, eg .gitconfig)
@@ -412,19 +412,19 @@ Also doesn't affect markdown files, or .txt files, which are currently treated t
 Upgraded to TypeScript 2.0; vscode v1.6+ is now required.
 
 
-### 0.6.2
+# 0.6.2
 
 Fixed a bug where the last line of comment sections of some types of files wouldn't be included in the wrapping (#12).
 
 Types affected: dockerfile, ini, makefile, perl, r, rust, shellscript, vb, yaml
 
 
-### 0.6.1
+# 0.6.1
 
 No longer hard-wraps very long words, eg URLs (#10)
 
 
-## 0.6.0
+# 0.6.0
 
 Changed the default keybinding to Alt+Q (#5)
 
@@ -438,22 +438,22 @@ Bug fixes:
 - Fixed alignment of end-comment marker (#9)
 
 
-### 0.5.3
+# 0.5.3
 
 Fixed problems with extensionless filenames.
 
 
-### 0.5.2
+# 0.5.2
 
 VSCode v1.1.0 broke Rewrap. This release fixes it.
 
 
-### 0.5.1
+# 0.5.1
 
 Fixed a filename issue, causing the extension not to work on Mac & Linux.
 
 
-## 0.5.0
+# 0.5.0
 
 This release adds a markdown feature to all document types: You can end a line with 2 spaces to force a mid-paragraph line break after it.
 
@@ -467,7 +467,7 @@ Speaking of markdown, the main new feature for this release is full markdown sup
 Lastly, the selection moving/expanding after wrapping has been fixed (#4)
 
 
-### 0.4.2
+# 0.4.2
 
 - If file is an unknown type, still provide plain text wrapping.
 - Adds some better paragraph detection for markdown.
@@ -475,12 +475,12 @@ Lastly, the selection moving/expanding after wrapping has been fixed (#4)
   - List items
 
 
-## 0.4.0
+# 0.4.0
 
 Now wraps to the correct visual column when using tabbed indents. (#2)
 
 
-## 0.3.0
+# 0.3.0
 
 Skipping a version number because this version adds two new features.
 
@@ -488,7 +488,7 @@ Skipping a version number because this version adds two new features.
 - Plain text: If you select something other than a comment it will be re-wrapped as plain text instead. Useful for text, markdown or html files etc, but works on any type of file.
 
 
-## 0.1.0
+# 0.1.0
 
 Add support for many more languages:
 
@@ -497,6 +497,6 @@ dockerfile, makefile, perl, perl6, r, shellscript, yaml, fsharp, haskell,
 elm, purescript, ini, jade, lua, perl6, php, powershell, python, rust, sql, vb
 
 
-## 0.0.2
+# 0.0.2
 
 First release.
