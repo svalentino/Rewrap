@@ -1,9 +1,9 @@
 # Contributing to Rewrap Revived
 
 This guide covers the development workflow for building, testing, and publishing
-the Rewrap Revived project. Rewrap Revived has three main components: an F# core (compiled to JS
-via Fable), a VSCode extension (TypeScript + Parcel), and a Visual Studio
-extension (C#).
+the Rewrap Revived project. Rewrap Revived has three main components: an F# core
+(compiled to JS via Fable), a VSCode extension (TypeScript + Parcel), and a
+Visual Studio extension (C#).
 
 ## Dependencies
 
@@ -14,9 +14,6 @@ all the dependencies installed:
 nix develop
 ```
 
-The build script auto-runs `npm install` and `dotnet tool restore` (installs
-Fable) on first build, so you don't need to run these manually.
-
 Alternatively, you can install all the dependencies manually. See flake.nix for
 a comprehensive list. These are the most important ones:
 
@@ -25,38 +22,40 @@ a comprehensive list. These are the most important ones:
 | .NET SDK | 6.0                               | Required for Fable 3.6.2. SDK 8.0 does not work. |
 | Node.js  | 18+ recommended (tested up to 25) |                                                  |
 | npm      | Included with Node.js             |                                                  |
+| Python   | 3.8+                              | Runs the build script                            |
 
 ## Project Structure
 
-| Path             | Purpose                                            |
-| ---------------- | -------------------------------------------------- |
-| `core/`          | F# wrapping logic, compiled to JS via Fable        |
-| `vscode/`        | VSCode extension — TypeScript, bundled with Parcel |
-| `vs/`            | Visual Studio extension — C#                       |
-| `docs/`          | MkDocs documentation site + spec/test files        |
-| `.config/do.mjs` | Build orchestrator, invoked via `./do` or `do.cmd` |
+| Path      | Purpose                                            |
+| --------- | -------------------------------------------------- |
+| `core/`   | F# wrapping logic, compiled to JS via Fable        |
+| `vscode/` | VSCode extension — TypeScript, bundled with Parcel |
+| `vs/`     | Visual Studio extension — C#                       |
+| `docs/`   | MkDocs documentation site + spec/test files        |
+| `./do`    | Build orchestrator (Python, stdlib only)           |
 
 ## The `./do` CLI
 
-All development operations go through the `./do` script. Run `./do` with no
-arguments to see available commands.
+All development operations go through `./do`. Run `./do --help`
+or `./do <subcommand> --help` for usage.
 
-| Command           | Description                                            |
-| ----------------- | ------------------------------------------------------ |
-| `./do clean`      | Remove build artifacts                                 |
-| `./do build`      | Development build (Fable + Parcel)                     |
-| `./do test`       | Build then run core + VSCode tests                     |
-| `./do prod`       | Production build (tests, ESLint, optimized bundle)     |
-| `./do watch`      | Concurrent Fable, TypeScript, and Parcel file watchers |
-| `./do package`    | Create `.obj/Rewrap-VSCode.vsix`                       |
-| `./do prepublish` | Clean build, version bump, changelog prep              |
-| `./do publish`    | Package and publish to Marketplace + OpenVSX           |
+| Command                | Description                                        |
+| ---------------------- | -------------------------------------------------- |
+| `./do clean`           | Remove build artifacts                             |
+| `./do build`           | Development build (Fable + Parcel)                 |
+| `./do test`            | Build then run core + VSCode tests                 |
+| `./do package`         | Production build, create `.obj/Rewrap-VSCode.vsix` |
+| `./do publish`         | Production build, publish to VS Code Marketplace   |
+| `./do version [X.Y.Z]` | Print or set the version across project files      |
 
-Each operation implies its predecessors — `test` builds first, `prod` tests
-first, `package` implies `prod`, and so on.
+**Flags** (apply to `build` and `test`):
 
-**Component targeting**: Commands accept `core` or `vscode` to build/test only
-one component:
+- `--release` — production-mode bundles, ESLint, no source maps. Implied by
+  `package` and `publish`.
+- `--watch` — run Fable / tsc / Parcel in watch mode. Ctrl-C exits cleanly.
+
+**Component targeting**: `build`, `test`, and `clean` accept an optional
+positional `core` or `vscode` to limit to one component:
 
 ```sh
 ./do build core      # Only build the F# core
@@ -64,7 +63,7 @@ one component:
 ./do test core       # Only run core tests
 ```
 
-Pass `--verbose` or `-v` for detailed output.
+Each command also accepts `-v` / `--verbose`.
 
 ## Building
 
@@ -81,23 +80,29 @@ dependencies automatically.
 
 **Core** (F# via Fable):
 
-1. `dotnet restore` (if needed)
+1. `dotnet tool restore` and `dotnet restore` (if needed)
 2. `dotnet fable` — transpiles F# to JavaScript in `core/dist/dev/`
 
 **VSCode extension** (TypeScript + Parcel):
 
-1. `npm install` in `vscode/` (if needed)
+1. `npm install` in `vscode/` and at the repo root (if needed)
 2. `tsc` type-check (no emit)
-3. Parcel bundles to `vscode/dist/Extension.js`
+3. Parcel bundles to `vscode/dist/Extension.node.js`
+
+The script uses mtime checks to skip steps whose outputs are already up to date.
 
 ### Production Build
 
 ```sh
-./do prod
+./do build --release
 ```
 
-Adds ESLint, removes source maps, produces optimized bundles. This is equivalent
-to what CI runs.
+Adds ESLint, removes source maps, produces optimized bundles. Combined with
+`test`, this is equivalent to what CI runs:
+
+```sh
+./do test --release
+```
 
 ### Visual Studio Extension
 
@@ -141,10 +146,7 @@ assertions against the VSCode API (settings resolution, basic wrapping).
 !!! warning
     Integration tests **cannot** run from inside VSCode's integrated terminal.
     The script detects this and skips with a warning. Run from an external
-    terminal instead.
-
-Alternatively, you can run the vscode tests with `xvfb-run`, which actually
-*does* work within a vscode terminal:
+    terminal instead — or use `xvfb-run`, which works inside a VSCode terminal:
 
 ```sh
 xvfb-run ./do test vscode
@@ -159,8 +161,7 @@ xvfb-run ./do test vscode
    loaded.
 4. Test wrapping with `Alt+Q` in a comment block.
 
-All launch configurations run the "Build extension" pre-launch task
-(`./do build vscode`) automatically.
+All launch configurations run a build pre-launch task automatically.
 
 **Available launch configurations:**
 
@@ -174,7 +175,7 @@ All launch configurations run the "Build extension" pre-launch task
 ## Watch Mode
 
 ```sh
-./do watch
+./do build --watch
 ```
 
 Runs three concurrent watchers for fast feedback during development:
@@ -182,6 +183,8 @@ Runs three concurrent watchers for fast feedback during development:
 - **Fable** — rebuilds core and auto-runs core tests on F# changes
 - **TypeScript** — continuous type-checking
 - **Parcel** — continuous VSCode extension bundling
+
+Ctrl-C stops all watchers cleanly.
 
 After starting watch mode, press F5 in VSCode to launch the Extension
 Development Host. Changes rebuild automatically; reload the dev host window to
@@ -197,41 +200,35 @@ pick them up.
 
 Runs a production build and outputs `.obj/Rewrap-VSCode.vsix`.
 
-### Full Publish Workflow
+### Publish to the Marketplace
 
-1. **Prepare**: `./do prepublish` — clean build, version bump, prints
-   instructions to edit `CHANGELOG.md`.
-2. **Edit changelog**: Update `CHANGELOG.md` with the new version's changes.
-3. **Publish**: `./do publish` — validates changes, packages, publishes to
-   both the VS Code Marketplace (via `vsce`) and OpenVSX (via `ovsx`).
+```sh
+./do publish
+```
 
-**Required environment variables:**
-
-| Variable     | Purpose            |
-| ------------ | ------------------ |
-| `GITHUB_PAT` | GitHub releases    |
-| `OVSX_PAT`   | OpenVSX publishing |
+Runs a production build and publishes via `vsce publish`. Uses whatever
+credentials `vsce` already has configured (`vsce login <publisher>` or the
+`VSCE_PAT` environment variable).
 
 ### Versioning
 
-Even major version = stable release, odd major version = pre-release. Version is
-stored in `vscode/package.json` and synced to `vs/source.extension.vsixmanifest`
-and `README.md` during prepublish.
+```sh
+./do version            # print current version
+./do version 1.18.0     # set version
+```
+
+Even major version = stable release, odd major version = pre-release. Version
+is stored in `vscode/package.json` and synced to
+`vs/source.extension.vsixmanifest` and `README.md`.
 
 ## CI Pipeline
 
 GitHub Actions (`.github/workflows/main.yml`) runs on every push and pull
 request:
 
-```
-./do build test --production
+```sh
+./do test --release
 ```
 
 This performs a full production build and runs all tests. Integration tests run
 under xvfb to provide a virtual display for the VSCode instance.
-
-To reproduce CI locally:
-
-```sh
-./do prod
-```

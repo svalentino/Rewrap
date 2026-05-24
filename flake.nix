@@ -45,7 +45,7 @@
             ];
         in {
           default = pkgs.mkShell {
-            packages = with pkgs; [ dotnet-sdk_6 nodejs_21 vsce xvfb-run ];
+            packages = with pkgs; [ dotnet-sdk_6 nodejs_21 python3 vsce xvfb-run ];
             shellHook = ''
               export LD_LIBRARY_PATH=${
                 pkgs.lib.makeLibraryPath vscodeRuntimeLibs
@@ -55,10 +55,13 @@
               Rewrap Revived Dev Shell
 
                   dotnet $(dotnet --version)
-                  node.js $(node --version)
-                  npm $(npm --version)
+                  node   $(node --version)
+                  npm    $(npm --version)
+                  $(python3 --version)
+                  vsce   $(vsce --version)
+                  xvfb-run
+
               EOF
-              ./do
             '';
           };
         });

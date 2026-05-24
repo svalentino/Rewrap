@@ -18,9 +18,10 @@ async function main() {
 
     // Run the integration tests
     await runTests({extensionDevelopmentPath, extensionTestsPath, launchArgs, reuseMachineInstall: false, vscodeExecutablePath})
+    console.error("Tests passed.")
   }
   catch (err) {
-    console.error("Failed to run tests")
+    console.error("Tests failed.")
     console.error(err)
     process.exit(1)
   }
