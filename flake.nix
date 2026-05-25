@@ -5,17 +5,17 @@
 
   outputs = { nixpkgs, ... }:
     let
-      systems =
-        [ "x86_64-linux" "aarch64-linux" "x86_64-darwin" "aarch64-darwin" ];
-      forAllSystems = nixpkgs.lib.genAttrs systems;
+      forAllSystems = f:
+        nixpkgs.lib.genAttrs [
+          "x86_64-linux"
+          "aarch64-linux"
+          "x86_64-darwin"
+          "aarch64-darwin"
+        ] (system: let pkgs = import nixpkgs { inherit system; }; in f pkgs);
     in {
-      formatter = forAllSystems
-        (system: let pkgs = import nixpkgs { inherit system; }; in pkgs.nixfmt);
-
-      devShells = forAllSystems (system:
+      formatter = forAllSystems (pkgs: pkgs.nixfmt);
+      devShells = forAllSystems (pkgs:
         let
-          pkgs = import nixpkgs { inherit system; };
-
           # These libs are vscode dependencies provided for running the vscode tests.
           # To identify missing libraries:
           # > nix develop -ic ldd .obj/vscode-test/vscode-linux-x64-1.121.0/VSCode-linux-x64/code | grep found
@@ -45,7 +45,13 @@
             ];
         in {
           default = pkgs.mkShell {
-            packages = with pkgs; [ dotnet-sdk_6 nodejs_21 python3 vsce xvfb-run ];
+            packages = with pkgs; [
+              dotnet-sdk_6
+              nodejs_21
+              python3
+              vsce
+              xvfb-run
+            ];
             shellHook = ''
               export LD_LIBRARY_PATH=${
                 pkgs.lib.makeLibraryPath vscodeRuntimeLibs
