@@ -1,0 +1,13 @@
+# Keep host build artifacts out of the image so the build is clean and
+# reproducible (host Node 26 modules would be incompatible inside the image).
+.git
+.obj
+node_modules
+vscode/node_modules
+core/dist
+vscode/dist
+.parcel-cache
+out
+*.vsix
+.vs
+.vscode-test

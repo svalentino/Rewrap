@@ -1,6 +1,6 @@
 {
   "name": "rewrap-revived",
-  "displayName": "Rewrap Revived",
+  "displayName": "Rewrap Revived: Fork",
   "description": "Hard word wrapping for comments and other text at a given column.",
   "keywords": [
     "word wrap",
@@ -13,7 +13,10 @@
     "multi-root ready"
   ],
   "version": "17.10.0",
-  "publisher": "dnut",
+  "publisher": "stefano-valentino",
+  "author": {
+    "name": "Stefano Valentino"
+  },
   "icon": "logo.png",
   "repository": {
     "type": "git",

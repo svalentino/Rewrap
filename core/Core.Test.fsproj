@@ -5,6 +5,8 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <BaseIntermediateOutputPath>..\.obj\.net\test</BaseIntermediateOutputPath>
     <BaseOutputPath>..\.obj\.net\test\bin</BaseOutputPath>
+    <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
+    <NuGetLockFilePath>packages.test.lock.json</NuGetLockFilePath>
   </PropertyGroup>
 
   <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk" />

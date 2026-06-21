@@ -20,6 +20,21 @@ comments to a configured maximium line length. This is a fork of the unmaintaine
 [Rewrap](https://github.com/stkb/Rewrap) extension by Steve Baker 
 ([@stkb](https://github.com/stkb)).
 
+> **About this fork.** This is a personal, security-vetted fork of
+> [dnut/rewrap](https://github.com/dnut/rewrap). It exists so the extension can be
+> built from audited source and side-loaded locally, **without** trusting a
+> pre-built artifact from a marketplace or pulling build dependencies onto the host
+> machine. The functional extension code is unchanged from upstream; the additions
+> here are a hardened, reproducible build pipeline:
+>
+> * A pinned, containerized build ([Dockerfile](Dockerfile)) — base image pinned by
+>   digest, Node pinned by version + sha256, npm deps installed via `npm ci` from the
+>   committed lockfiles, and the compile/package step run with `--network=none`.
+> * A `.dockerignore` that keeps host build artifacts out of the image.
+>
+> No build or compile tooling (.NET SDK, Node, Fable, vsce) is installed on the host —
+> everything runs inside the container, and only the finished `.vsix` is exported.
+
 <br><img src="https://dnut.github.io/Rewrap/images/example.svg" width="700px"/><br/><br/>
 
 The main Rewrap command is: <sn>**Rewrap Comment / Text**</sn>, by default bound to
@@ -42,16 +57,100 @@ samples (which are untouched) etc:
 <div class="hideOnDocsSite"><br/><b><a href="https://dnut.github.io/Rewrap/">
 See the docs site for more info.</a></b></div>
 
-## Installation
+## Installation (build from source, side-load locally)
 
-Rewrap Revived is available in both the
-[Microsoft marketplace](https://marketplace.visualstudio.com/items?itemName=dnut.rewrap-revived)
-and the [OpenVSX marketplace](https://open-vsx.org/extension/dnut/rewrap-revived).
+This fork is intended to be built from source and installed manually, rather than
+pulled from a marketplace. The build runs entirely inside a Docker container, so the
+only requirement on the host is Docker.
 
-**Please install the pre-release version**. That way, you can identify any bugs and report
-them, so they don't make their way into the stable release. If you *do* observe a bug, then you
-can switch to the stable release, and rest assured that the bug will not be introduced there,
-since you have reported the issue (unless of course, it is already present in both releases).
+1. Build the extension and export the `.vsix` to `./out`:
+
+   ```sh
+   docker build --target export --output type=local,dest=./out .
+   ```
+
+2. Side-load it into VS Code (no marketplace involved):
+
+   ```sh
+   code --install-extension out/rewrap-revived-*.vsix
+   ```
+
+   Then reload VS Code.
+
+To verify or remove later:
+
+```sh
+code --list-extensions | grep rewrap                      # confirm installed (stefano-valentino.rewrap-revived)
+code --uninstall-extension stefano-valentino.rewrap-revived # remove
+```
+
+This fork uses its own publisher (`stefano-valentino`), so its extension ID is
+`stefano-valentino.rewrap-revived` — distinct from the marketplace extension
+`dnut.rewrap-revived`. This matters: VS Code keys on the extension ID and will fetch
+marketplace metadata (publisher name, ratings, download count) for any ID that matches
+a listing, even for a locally side-loaded build. A distinct ID guarantees the installed
+extension shows *this* fork's identity and never resolves to the upstream listing. If
+you still have the marketplace version installed, remove it with
+`code --uninstall-extension dnut.rewrap-revived`.
+
+Side-loaded extensions are **not** auto-updated by VS Code — the installed bytes stay
+frozen at exactly what you built until you rebuild and reinstall. This is intentional:
+updates only happen when you re-audit and rebuild.
+
+### Refreshing the pins after an audit
+
+The Dockerfile pins the .NET SDK base image by digest. After auditing a newer
+toolchain, refresh it with:
+
+```sh
+docker buildx imagetools inspect mcr.microsoft.com/dotnet/sdk:6.0
+```
+
+and update the `@sha256:...` digest in the [Dockerfile](Dockerfile).
+
+## Security hardening
+
+This fork's goal is a supply-chain-resistant build: the extension you install is
+compiled from source you can audit, using a toolchain that cannot silently change
+underneath you. The functional extension code is unchanged from upstream — all of the
+following are build/packaging changes layered on top.
+
+**Build isolation (host stays clean)**
+* The entire toolchain (.NET SDK, Node, Fable, `vsce`, Parcel) runs inside a Docker
+  container ([Dockerfile](Dockerfile)). Nothing is installed on the host; only the
+  finished `.vsix` is exported via a `FROM scratch` stage.
+* [.dockerignore](.dockerignore) keeps host artifacts (e.g. a host `node_modules`)
+  out of the image, so the in-container build is clean and reproducible.
+* The compile/package step runs with `--network=none`. Dependencies are fetched in
+  earlier layers; the step that turns source into the shipped artifact has no network
+  access, so a compromised build script cannot exfiltrate or fetch code while building.
+
+**Every dependency pinned and cryptographically locked**
+* **npm** (root + `vscode/`): installed with `npm ci` from committed
+  `package-lock.json` files (lockfileVersion 2). Every entry — direct and transitive —
+  carries an SRI `sha512` integrity hash; `npm ci` fails on any drift.
+* **NuGet / .NET**: committed `core/packages.core.lock.json` and
+  `core/packages.test.lock.json` lock the full transitive graph with a SHA-512
+  `contentHash` per package. Restore runs in `--locked-mode`, failing the build if the
+  resolved graph deviates from the lockfiles.
+* **Fable tool**: pinned to an exact version in [.config/dotnet-tools.json](.config/dotnet-tools.json).
+* **Docker base image**: pinned by `sha256` digest, not a floating tag.
+* **Node runtime**: pinned to an exact version and installed from the official tarball
+  verified against its `sha256` checksum (per architecture), rather than a
+  drift-prone apt repository.
+
+**Manual, audited updates only**
+* Side-loaded extensions are not auto-updated by VS Code. The installed bytes stay
+  frozen at exactly what you built until you re-audit, rebuild, and reinstall.
+
+**Residual trust notes**
+* `npm ci` and `dotnet restore` necessarily run with network access to fetch
+  dependencies. The lockfiles and checksums pin *what* is fetched, and `--network=none`
+  protects the compile step — but an audit should still cover the dependency tree
+  those lockfiles pin, since that code executes during the build.
+* The Fable tool's own dependency closure is not lockfile-backed (dotnet local tools
+  don't support lockfiles); it is bounded by its pinned version plus the
+  digest-pinned SDK image.
 
 ## Contributing
 

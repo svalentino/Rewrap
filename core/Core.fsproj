@@ -5,6 +5,8 @@
     <AssemblyName>Rewrap.Core</AssemblyName>
     <BaseIntermediateOutputPath>..\.obj\.net\core</BaseIntermediateOutputPath>
     <BaseOutputPath>..\.obj\.net\core\bin</BaseOutputPath>
+    <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
+    <NuGetLockFilePath>packages.core.lock.json</NuGetLockFilePath>
   </PropertyGroup>
 
   <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk" />
